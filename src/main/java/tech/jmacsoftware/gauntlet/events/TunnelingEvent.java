@@ -26,6 +26,8 @@ public class TunnelingEvent implements Listener {
 		ItemStack tool = player.getEquipment().getItemInMainHand();
 
 		if (checkBlockTag(block)
+				&& tool != null
+				&& tool.hasItemMeta()
 				&& tool.getItemMeta().hasLocalizedName()
 				&& tool.getItemMeta().getLocalizedName().equals(CustomItems.REDSTONE_PICKAXE.getName())) {
 
