@@ -4,17 +4,18 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import tech.jmacsoftware.gauntlet.events.TunnelingEvent;
-import tech.jmacsoftware.gauntlet.items.RedstonePickaxe;
+import tech.jmacsoftware.gauntlet.items.ToolRecipes;
 
 public class Gauntlet extends JavaPlugin {
 
 	public void onEnable() {
-		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Reality is what I want it to be.");
 		getServer().getPluginManager().registerEvents(new TunnelingEvent(), this);
 		loadConfig();
 
-		RedstonePickaxe redstonePickaxe = new RedstonePickaxe();
-		redstonePickaxe.shapedRecipe();
+		ToolRecipes toolRecipes = new ToolRecipes();
+		toolRecipes.redstonePickaxe();
+
+		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Reality is what I want it to be.");
 	}
 
 	public void onDisable() {

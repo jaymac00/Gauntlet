@@ -12,11 +12,11 @@ import org.bukkit.plugin.Plugin;
 import tech.jmacsoftware.gauntlet.Gauntlet;
 import tech.jmacsoftware.gauntlet.enums.CustomItems;
 
-public class RedstonePickaxe implements Listener {
+public class ToolRecipes implements Listener {
 
 	private Plugin plugin = Gauntlet.getPlugin(Gauntlet.class);
 
-	public void shapedRecipe() {
+	public void redstonePickaxe() {
 		ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE,1);
 		ItemMeta meta = item.getItemMeta();
 
