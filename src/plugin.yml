@@ -1,6 +1,6 @@
 name: Gauntlet
-author: Lone_Lad
-version: 1.0
+authors: [Lone_Lad, AxMan_JKC]
+version: 1.1
 main: tech.jmacsoftware.gauntlet.Gauntlet
 description: Private server plugin
 api-version: 1.20
