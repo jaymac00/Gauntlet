@@ -16,6 +16,7 @@ public class ToolRecipes implements Listener {
 
 	private Plugin plugin = Gauntlet.getPlugin(Gauntlet.class);
 
+	// Nice!
 	public void redstonePickaxe() {
 		ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE,1);
 		ItemMeta meta = item.getItemMeta();
