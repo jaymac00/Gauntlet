@@ -3,6 +3,7 @@ package tech.jmacsoftware.gauntlet;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import tech.jmacsoftware.gauntlet.events.GraveEvent;
 import tech.jmacsoftware.gauntlet.events.TunnelingEvent;
 import tech.jmacsoftware.gauntlet.items.ToolRecipes;
 
@@ -10,6 +11,7 @@ public class Gauntlet extends JavaPlugin {
 
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(new TunnelingEvent(), this);
+		getServer().getPluginManager().registerEvents(new GraveEvent(), this);
 		loadConfig();
 
 		ToolRecipes toolRecipes = new ToolRecipes();
