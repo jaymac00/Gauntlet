@@ -7,7 +7,10 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -23,11 +26,14 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Consumer;
+import org.bukkit.util.Vector;
 
 import tech.jmacsoftware.gauntlet.Gauntlet;
 import tech.jmacsoftware.gauntlet.enums.CustomBlocks;
 import tech.jmacsoftware.gauntlet.enums.InventorySizes;
+import tech.jmacsoftware.gauntlet.items.BlockDrops;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -35,7 +41,9 @@ public class GraveEvent implements Listener {
 
 	private Plugin plugin = Gauntlet.getPlugin(Gauntlet.class);
 
-	private NamespacedKey gravestoneKey = new NamespacedKey(plugin, CustomBlocks.GRAVESTONE.getKey());
+	private final NamespacedKey gravestoneKey = new NamespacedKey(plugin, CustomBlocks.GRAVESTONE.getKey());
+
+	private BlockDrops blockDrops = new BlockDrops();
 
 	public static HashMap<String, Inventory> GRAVES = new HashMap<>();
 
@@ -52,25 +60,11 @@ public class GraveEvent implements Listener {
 
 		World world = player.getWorld();
 		Location playerLocation = player.getLocation();
-		Consumer<ArmorStand> armorStandConsumer = gravestone -> createGravestone(player, gravestone);
+		world.setType(playerLocation, Material.RED_NETHER_BRICK_SLAB);
+		Consumer<ItemFrame> itemFrameConsumer = gravestone -> createGravestoneBlockOnDeath(player, player.getKiller(), gravestone);
+		world.spawn(playerLocation, ItemFrame.class, itemFrameConsumer);
+		Consumer<ArmorStand> armorStandConsumer = gravestone -> createGravestoneHead(player, gravestone);
 		world.spawn(new Location(world, playerLocation.getBlockX(), playerLocation.getBlockY(), playerLocation.getBlockZ(), playerLocation.getYaw(), playerLocation.getPitch()).add(0.5, -0.225, 0.5), ArmorStand.class, armorStandConsumer);
-		world.setType(player.getLocation(), Material.RED_NETHER_BRICK_SLAB);
-
-//		Player killer = player.getKiller();
-//		ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
-//		SkullMeta meta = (SkullMeta) head.getItemMeta();
-//		meta.setOwningPlayer(player);
-//		meta.setDisplayName(PlayerColors.resolveByPlayerName(player.getName()).getPrimaryColor() + player.getName() + "\'s Head");
-//
-//		ArrayList<String> lore = new ArrayList<>();
-//		lore.add(ChatColor.GRAY + "Killed by " + ChatColor.RESET
-//				+ (killer != null
-//				? PlayerColors.resolveByPlayerName(killer.getName()).getSecondaryColor() + killer.getName()
-//				: ChatColor.GRAY + "INADEQUACY"));
-//		meta.setLore(lore);
-//
-//		head.setItemMeta(meta);
-//		world.dropItemNaturally(player.getLocation().add(0.0, 1.0, 0.0), head);
 	}
 
 	@EventHandler
@@ -83,18 +77,17 @@ public class GraveEvent implements Listener {
 				&& gravestone.getType().equals(Material.RED_NETHER_BRICK_SLAB)) {
 
 			World world = player.getWorld();
-			world.getNearbyEntities(gravestone.getLocation(), 1.0, 1.0, 1.0,
-					gravestoneHead -> gravestoneHead.getPersistentDataContainer().has(gravestoneKey, PersistentDataType.STRING))
-					.stream().forEach(entity -> {
-
-						String uuid = entity.getPersistentDataContainer().get(gravestoneKey, PersistentDataType.STRING);
-						OfflinePlayer corpse = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
-						Inventory grave = GRAVES.get(uuid);
-						if (grave != null && gravestone.getLocation().equals(corpse.getLastDeathLocation())) {
-							event.setUseItemInHand(Event.Result.DENY);
-							player.openInventory(grave);
-						}
-			});
+			Collection<Entity> nearbyEntities = world.getNearbyEntities(gravestone.getLocation(), 0.5, 0.5, 0.5,
+					gravestoneHead -> gravestoneHead.getPersistentDataContainer().has(gravestoneKey, PersistentDataType.STRING));
+			if (!nearbyEntities.isEmpty()) {
+				String uuid = nearbyEntities.stream().findAny().get().getPersistentDataContainer().get(gravestoneKey, PersistentDataType.STRING);
+				OfflinePlayer corpse = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+				Inventory grave = GRAVES.get(uuid);
+				if (grave != null && gravestone.getLocation().equals(corpse.getLastDeathLocation())) {
+					event.setUseItemInHand(Event.Result.DENY);
+					player.openInventory(grave);
+				}
+			}
 		}
 	}
 
@@ -102,30 +95,68 @@ public class GraveEvent implements Listener {
 	public void onBreak(BlockBreakEvent event) {
 
 		Block gravestone = event.getBlock();
-		Player player = event.getPlayer();
-		World world = player.getWorld();
 		if (gravestone.getType().equals(Material.RED_NETHER_BRICK_SLAB)) {
-			world.getNearbyEntities(gravestone.getLocation(), 1.0, 1.0, 1.0,
-					gravestoneHead -> gravestoneHead.getPersistentDataContainer().has(gravestoneKey, PersistentDataType.STRING))
-					.stream().forEach(entity -> {
+			Player player = event.getPlayer();
+			World world = player.getWorld();
+			Collection<Entity> nearbyEntities = world.getNearbyEntities(gravestone.getLocation(), 0.5, 0.5, 0.5,
+					gravestoneHead -> gravestoneHead.getPersistentDataContainer().has(gravestoneKey, PersistentDataType.STRING));
+			if (!nearbyEntities.isEmpty()) {
 
-						String uuid = entity.getPersistentDataContainer().get(gravestoneKey, PersistentDataType.STRING);
-						Inventory grave = GRAVES.get(uuid);
-						if (grave != null) {
-							for (ItemStack item : grave.getContents()) {
-								if (item != null) {
-									world.dropItemNaturally(gravestone.getLocation(), item);
-								}
-							}
+				String uuid = nearbyEntities.stream().findAny().get().getPersistentDataContainer().get(gravestoneKey, PersistentDataType.STRING);
+				Inventory grave = GRAVES.get(uuid);
+				if (grave != null) {
+					for (ItemStack item : grave.getContents()) {
+						if (item != null) {
+							world.dropItemNaturally(gravestone.getLocation(), item);
 						}
-						event.setDropItems(false);
-						GRAVES.remove(uuid);
-						entity.remove();
-			});
+					}
+				}
+				GRAVES.remove(uuid);
+
+				nearbyEntities.forEach(entity -> {
+					try {
+						world.dropItemNaturally(gravestone.getLocation(), ((ItemFrame) entity).getItem());
+					} catch (Exception e) {
+						// not sure if there is a better way of doing this, short of creating/searching for 2 different tags
+					}
+					entity.remove();
+				});
+				event.setDropItems(false);
+			}
 		}
 	}
 
-	private void createGravestone(Player player, ArmorStand armorStand) {
+	@EventHandler
+	private void onPlace(PlayerInteractEvent event) {
+
+		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+				&& event.isBlockInHand()
+				&& !event.useItemInHand().equals(Event.Result.DENY)) {
+
+			Player player = event.getPlayer();
+			ItemStack blockUsed = player.getInventory().getItem(event.getHand());
+			if (blockUsed.hasItemMeta()
+					&& blockUsed.getItemMeta().hasLocalizedName()
+					&& blockUsed.getItemMeta().getLocalizedName().equals(CustomBlocks.GRAVESTONE.getName())
+					&& blockUsed.getType().equals(Material.RED_NETHER_BRICK_SLAB)
+					&& blockUsed.getItemMeta().getPersistentDataContainer().has(BlockDrops.PRIMARY_PLAYER, PersistentDataType.STRING)) {
+
+				World world = player.getWorld();
+				Block blockClicked = event.getClickedBlock();
+				Location blockLocation = blockClicked.getLocation();
+				Vector faceVector = event.getBlockFace().getDirection().normalize();
+
+				world.setType(blockLocation.add(faceVector), Material.RED_NETHER_BRICK_SLAB);
+				Consumer<ItemFrame> itemFrameConsumer = gravestone -> createGravestoneBlockOnPlace(player, blockUsed, gravestone);
+				world.spawn(blockLocation, ItemFrame.class, itemFrameConsumer);
+				Consumer<ArmorStand> armorStandConsumer = gravestone -> createGravestoneHead(player, gravestone);
+				world.spawn((blockLocation).add(0.5, -0.225, 0.5), ArmorStand.class, armorStandConsumer);
+				blockUsed.setAmount(blockUsed.getAmount() - 1);
+			}
+		}
+	}
+
+	private void createGravestoneHead(Player player, ArmorStand armorStand) {
 
 		ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
 		SkullMeta meta = (SkullMeta) head.getItemMeta();
@@ -146,5 +177,29 @@ public class GraveEvent implements Listener {
 		armorStand.setSilent(true);
 		armorStand.setSmall(true);
 		armorStand.setVisible(false);
+	}
+
+	private void createGravestoneBlockOnDeath(Player player, Player killer, ItemFrame itemFrame) {
+
+		itemFrame.getPersistentDataContainer().set(gravestoneKey, PersistentDataType.STRING, player.getUniqueId().toString());
+
+		itemFrame.setFixed(true);
+		itemFrame.setFacingDirection(BlockFace.UP);
+		itemFrame.setInvulnerable(true);
+		itemFrame.setItem(blockDrops.gravestone(player, killer));
+		itemFrame.setSilent(true);
+		itemFrame.setVisible(false);
+	}
+
+	private void createGravestoneBlockOnPlace(Player player, ItemStack gravestone, ItemFrame itemFrame) {
+
+		itemFrame.getPersistentDataContainer().set(gravestoneKey, PersistentDataType.STRING, player.getUniqueId().toString());
+
+		itemFrame.setFixed(true);
+		itemFrame.setFacingDirection(BlockFace.UP);
+		itemFrame.setInvulnerable(true);
+		itemFrame.setItem(gravestone);
+		itemFrame.setSilent(true);
+		itemFrame.setVisible(false);
 	}
 }
