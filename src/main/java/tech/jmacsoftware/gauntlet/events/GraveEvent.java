@@ -1,9 +1,10 @@
 package tech.jmacsoftware.gauntlet.events;
 
-import org.bukkit.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
@@ -18,7 +19,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
@@ -27,10 +27,9 @@ import org.bukkit.util.Consumer;
 import tech.jmacsoftware.gauntlet.Gauntlet;
 import tech.jmacsoftware.gauntlet.enums.CustomBlocks;
 import tech.jmacsoftware.gauntlet.enums.InventorySizes;
-import tech.jmacsoftware.gauntlet.enums.PlayerColors;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class GraveEvent implements Listener {
 
@@ -45,36 +44,33 @@ public class GraveEvent implements Listener {
 
 		Player player = event.getEntity();
 		Inventory grave = plugin.getServer().createInventory(null, InventorySizes.GRAVE.getSize(), player.getName() + "\'s Grave");
-		PlayerInventory playerInventory = player.getInventory();
-
-		for (ItemStack item : playerInventory.getContents()) {
-			if (item != null) {
-				grave.addItem(item);
-			}
+		for (ItemStack item : event.getDrops()) {
+			grave.addItem(item);
 		}
-		GRAVES.put(player.getName(), grave);
+		GRAVES.put(player.getUniqueId().toString(), grave);
+		event.getDrops().clear();
 
 		World world = player.getWorld();
 		Location playerLocation = player.getLocation();
 		Consumer<ArmorStand> armorStandConsumer = gravestone -> createGravestone(player, gravestone);
 		world.spawn(new Location(world, playerLocation.getBlockX(), playerLocation.getBlockY(), playerLocation.getBlockZ(), playerLocation.getYaw(), playerLocation.getPitch()).add(0.5, -0.225, 0.5), ArmorStand.class, armorStandConsumer);
-		world.setType(player.getLocation(), Material.STONE_SLAB);
+		world.setType(player.getLocation(), Material.RED_NETHER_BRICK_SLAB);
 
-		Player killer = player.getKiller();
-		ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
-		SkullMeta meta = (SkullMeta) head.getItemMeta();
-		meta.setOwningPlayer(player);
-		meta.setDisplayName(PlayerColors.resolveByPlayerName(player.getName()).getPrimaryColor() + player.getName() + "\'s Head");
-
-		ArrayList<String> lore = new ArrayList<>();
-		lore.add(ChatColor.GRAY + "Killed by " + ChatColor.RESET
-				+ (killer != null
-				? PlayerColors.resolveByPlayerName(killer.getName()).getSecondaryColor() + killer.getName()
-				: ChatColor.GRAY + "INADEQUACY"));
-		meta.setLore(lore);
-
-		head.setItemMeta(meta);
-		world.dropItemNaturally(player.getLocation().add(0.0, 1.0, 0.0), head);
+//		Player killer = player.getKiller();
+//		ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
+//		SkullMeta meta = (SkullMeta) head.getItemMeta();
+//		meta.setOwningPlayer(player);
+//		meta.setDisplayName(PlayerColors.resolveByPlayerName(player.getName()).getPrimaryColor() + player.getName() + "\'s Head");
+//
+//		ArrayList<String> lore = new ArrayList<>();
+//		lore.add(ChatColor.GRAY + "Killed by " + ChatColor.RESET
+//				+ (killer != null
+//				? PlayerColors.resolveByPlayerName(killer.getName()).getSecondaryColor() + killer.getName()
+//				: ChatColor.GRAY + "INADEQUACY"));
+//		meta.setLore(lore);
+//
+//		head.setItemMeta(meta);
+//		world.dropItemNaturally(player.getLocation().add(0.0, 1.0, 0.0), head);
 	}
 
 	@EventHandler
@@ -84,20 +80,20 @@ public class GraveEvent implements Listener {
 		Block gravestone = event.getClickedBlock();
 		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)
 				&& !player.isSneaking()
-				&& gravestone.getType().equals(Material.STONE_SLAB)
-				&& gravestone.getLocation().equals(player.getLastDeathLocation())) {
+				&& gravestone.getType().equals(Material.RED_NETHER_BRICK_SLAB)) {
 
 			World world = player.getWorld();
 			world.getNearbyEntities(gravestone.getLocation(), 1.0, 1.0, 1.0,
 					gravestoneHead -> gravestoneHead.getPersistentDataContainer().has(gravestoneKey, PersistentDataType.STRING))
 					.stream().forEach(entity -> {
 
-				String corpseName = entity.getPersistentDataContainer().get(gravestoneKey, PersistentDataType.STRING);
-				Inventory grave = GRAVES.get(corpseName);
-				if (grave != null) {
-					event.setUseItemInHand(Event.Result.DENY);
-					player.openInventory(grave);
-				}
+						String uuid = entity.getPersistentDataContainer().get(gravestoneKey, PersistentDataType.STRING);
+						OfflinePlayer corpse = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+						Inventory grave = GRAVES.get(uuid);
+						if (grave != null && gravestone.getLocation().equals(corpse.getLastDeathLocation())) {
+							event.setUseItemInHand(Event.Result.DENY);
+							player.openInventory(grave);
+						}
 			});
 		}
 	}
@@ -108,22 +104,23 @@ public class GraveEvent implements Listener {
 		Block gravestone = event.getBlock();
 		Player player = event.getPlayer();
 		World world = player.getWorld();
-		if (gravestone.getType().equals(Material.STONE_SLAB)) {
+		if (gravestone.getType().equals(Material.RED_NETHER_BRICK_SLAB)) {
 			world.getNearbyEntities(gravestone.getLocation(), 1.0, 1.0, 1.0,
 					gravestoneHead -> gravestoneHead.getPersistentDataContainer().has(gravestoneKey, PersistentDataType.STRING))
 					.stream().forEach(entity -> {
 
-				String corpseName = entity.getPersistentDataContainer().get(gravestoneKey, PersistentDataType.STRING);
-				Inventory grave = GRAVES.get(corpseName);
-				if (grave != null) {
-					for (ItemStack item : grave.getContents()) {
-						if (item != null) {
-							world.dropItemNaturally(gravestone.getLocation(), item);
+						String uuid = entity.getPersistentDataContainer().get(gravestoneKey, PersistentDataType.STRING);
+						Inventory grave = GRAVES.get(uuid);
+						if (grave != null) {
+							for (ItemStack item : grave.getContents()) {
+								if (item != null) {
+									world.dropItemNaturally(gravestone.getLocation(), item);
+								}
+							}
 						}
-					}
-				}
-				GRAVES.remove(corpseName);
-				entity.remove();
+						event.setDropItems(false);
+						GRAVES.remove(uuid);
+						entity.remove();
 			});
 		}
 	}
@@ -141,7 +138,7 @@ public class GraveEvent implements Listener {
 		armorStand.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.ADDING);
 
 		armorStand.getEquipment().setHelmet(head);
-		armorStand.getPersistentDataContainer().set(gravestoneKey, PersistentDataType.STRING, player.getName());
+		armorStand.getPersistentDataContainer().set(gravestoneKey, PersistentDataType.STRING, player.getUniqueId().toString());
 
 		armorStand.setCustomName(player.getName() + "\'s " + CustomBlocks.GRAVESTONE.getName());
 		armorStand.setGravity(false);
