@@ -29,7 +29,7 @@ public class BlockDrops implements Listener {
 
 		ItemStack gravestone = new ItemStack(Material.RED_NETHER_BRICK_SLAB, 1);
 		ItemMeta meta = gravestone.getItemMeta();
-		meta.setDisplayName("Gravestone");
+		meta.setDisplayName(ChatColor.WHITE + "Gravestone");
 		meta.setLocalizedName(CustomBlocks.GRAVESTONE.getName());
 		meta.getPersistentDataContainer().set(PRIMARY_PLAYER, PersistentDataType.STRING, player.getUniqueId().toString());
 		meta.setCustomModelData(1);

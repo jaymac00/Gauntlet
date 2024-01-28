@@ -70,6 +70,8 @@ public class GraveEvent implements Listener {
 		if (player.getKiller() != null) {
 			world.dropItemNaturally(playerLocation.add(0.0, 1.0, 0.0), blockDrops.playerHead(player, player.getKiller()));
 		}
+
+		GRAVES.get(player.getUniqueId().toString()).forEach(item -> plugin.getServer().getConsoleSender().sendMessage(item != null ? item.toString() : "null"));
 	}
 
 	@EventHandler
