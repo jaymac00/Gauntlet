@@ -11,6 +11,7 @@ import tech.jmacsoftware.gauntlet.items.ToolRecipes;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 
 public class Gauntlet extends JavaPlugin {
@@ -42,18 +43,28 @@ public class Gauntlet extends JavaPlugin {
 	private void loadGraves() {
 		try {
 			GraveEvent.GRAVES = object_mapper.readValue(new File(System.getProperty("user.dir").concat("/resources/inventories/graves.json")), HashMap.class);
-		} catch (FileNotFoundException e) {
-			
+			getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Successfully loaded graves!");
 		} catch (IOException e) {
-			getServer().getConsoleSender().sendMessage("Unable to load graves...\n" + e);
+			getServer().getConsoleSender().sendMessage(ChatColor.RED + "Unable to load graves...\n" + e);
 		}
 	}
 
 	private void saveGraves() {
 		try {
 			object_mapper.writeValue(new File(System.getProperty("user.dir").concat("/resources/inventories/graves.json")), GraveEvent.GRAVES);
+			getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Successfully saved graves!");
+		} catch (FileNotFoundException e) {
+			File graves = new File(System.getProperty("user.dir").concat("/resources/inventories/graves.json"));
+			try {
+				graves.getParentFile().mkdirs();
+				graves.createNewFile();
+				object_mapper.writeValue(graves, GraveEvent.GRAVES);
+				getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Successfully saved graves!");
+			} catch (IOException e2) {
+				getServer().getConsoleSender().sendMessage(ChatColor.RED + "Unable to save graves...\n" + e + "\n" + e2);
+			}
 		} catch (IOException e) {
-			getServer().getConsoleSender().sendMessage("Unable to save graves...\n" + e);
+			getServer().getConsoleSender().sendMessage(ChatColor.RED + "Unable to save graves...\n" + e);
 		}
 	}
 
