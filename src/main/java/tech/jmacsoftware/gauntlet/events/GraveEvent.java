@@ -39,11 +39,11 @@ import java.util.UUID;
 
 public class GraveEvent implements Listener {
 
+	private BlockDrops blockDrops = new BlockDrops();
+
 	private Plugin plugin = Gauntlet.getPlugin(Gauntlet.class);
 
 	private final NamespacedKey gravestone_key = new NamespacedKey(plugin, CustomBlocks.GRAVESTONE.getKey());
-
-	private BlockDrops blockDrops = new BlockDrops();
 
 	public static HashMap<String, Inventory> GRAVES = new HashMap<>();
 
@@ -82,8 +82,8 @@ public class GraveEvent implements Listener {
 				&& gravestone.getType().equals(Material.RED_NETHER_BRICK_SLAB)) {
 
 			World world = player.getWorld();
-			Collection<Entity> nearbyEntities = world.getNearbyEntities(gravestone.getLocation(), 0.5, 0.5, 0.5,
-					gravestoneHead -> gravestoneHead.getPersistentDataContainer().has(gravestone_key, PersistentDataType.STRING));
+			Collection<Entity> nearbyEntities = world.getNearbyEntities(gravestone.getLocation(), 0.5, 0.5, 0.5).stream()
+					.filter(gravestoneHead -> gravestoneHead.getPersistentDataContainer().has(gravestone_key, PersistentDataType.STRING)).toList();
 			if (!nearbyEntities.isEmpty()) {
 
 				String uuid = nearbyEntities.stream().findAny().get().getPersistentDataContainer().get(gravestone_key, PersistentDataType.STRING);
@@ -104,8 +104,8 @@ public class GraveEvent implements Listener {
 		if (gravestone.getType().equals(Material.RED_NETHER_BRICK_SLAB)) {
 			Player player = event.getPlayer();
 			World world = player.getWorld();
-			Collection<Entity> nearbyEntities = world.getNearbyEntities(gravestone.getLocation(), 0.5, 0.5, 0.5,
-					gravestoneHead -> gravestoneHead.getPersistentDataContainer().has(gravestone_key, PersistentDataType.STRING));
+			Collection<Entity> nearbyEntities = world.getNearbyEntities(gravestone.getLocation(), 0.5, 0.5, 0.5).stream()
+					.filter(gravestoneHead -> gravestoneHead.getPersistentDataContainer().has(gravestone_key, PersistentDataType.STRING)).toList();
 			if (!nearbyEntities.isEmpty()) {
 
 				String uuid = nearbyEntities.stream().findAny().get().getPersistentDataContainer().get(gravestone_key, PersistentDataType.STRING);
@@ -149,7 +149,6 @@ public class GraveEvent implements Listener {
 					&& blockUsed.getItemMeta().getLocalizedName().equals(CustomBlocks.GRAVESTONE.getName())) {
 
 				Vector faceVector = event.getBlockFace().getDirection().normalize();
-
 				world.setType(blockLocation.add(faceVector), Material.RED_NETHER_BRICK_SLAB);
 				Consumer<ItemFrame> itemFrameConsumer = gravestone -> createGravestoneBlockOnPlace(player, blockUsed, gravestone);
 				world.spawn(blockLocation, ItemFrame.class, itemFrameConsumer);
@@ -182,7 +181,6 @@ public class GraveEvent implements Listener {
 		armorStand.getEquipment().setHelmet(head);
 		armorStand.getPersistentDataContainer().set(gravestone_key, PersistentDataType.STRING, player.getUniqueId().toString());
 
-		armorStand.setCustomName(player.getName() + "\'s " + CustomBlocks.GRAVESTONE.getName());
 		armorStand.setGravity(false);
 		armorStand.setInvulnerable(true);
 		armorStand.setSilent(true);

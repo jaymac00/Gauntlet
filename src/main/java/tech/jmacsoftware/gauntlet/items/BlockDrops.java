@@ -49,7 +49,6 @@ public class BlockDrops implements Listener {
 				+ PlayerColors.resolveByPlayerName(killer.getName()).getSecondaryColor() + killer.getName());
 		meta.setLore(lore);
 
-		meta.getPersistentDataContainer().set(PRIMARY_PLAYER, PersistentDataType.STRING, player.getUniqueId().toString());
 		meta.getPersistentDataContainer().set(SECONDARY_PLAYER, PersistentDataType.STRING, killer.getUniqueId().toString());
 		head.setItemMeta(meta);
 		return head;
