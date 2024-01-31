@@ -212,7 +212,8 @@ public class GraveEvents implements Listener {
 		Collection<ItemFrame> itemFrames = event.getBlock().getWorld().getEntitiesByClass(ItemFrame.class);
 		if (!event.getBlocks().stream()
 				.filter(block -> !itemFrames.stream()
-						.filter(itemFrame -> itemFrame.getLocation().getBlock().getLocation()
+						.filter(itemFrame -> itemFrame.getPersistentDataContainer().has(namespaced_key, PersistentDataType.STRING)
+								&& itemFrame.getLocation().getBlock().getLocation()
 								.equals(block.getLocation())).toList().isEmpty())
 				.toList().isEmpty()) {
 
@@ -226,7 +227,8 @@ public class GraveEvents implements Listener {
 		if (event.isSticky()
 				&& !event.getBlocks().stream()
 				.filter(block -> !itemFrames.stream()
-						.filter(itemFrame -> itemFrame.getLocation().getBlock().getLocation()
+						.filter(itemFrame -> itemFrame.getPersistentDataContainer().has(namespaced_key, PersistentDataType.STRING)
+								&& itemFrame.getLocation().getBlock().getLocation()
 								.equals(block.getLocation())).toList().isEmpty())
 				.toList().isEmpty()) {
 
