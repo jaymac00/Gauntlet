@@ -16,7 +16,7 @@ import tech.jmacsoftware.gauntlet.enums.FacingPlane;
 
 import java.util.Collection;
 
-public class TunnelingEvent implements Listener {
+public class TunnelingEvents implements Listener {
 
 	@EventHandler
 	public void onBreak(BlockBreakEvent event) {

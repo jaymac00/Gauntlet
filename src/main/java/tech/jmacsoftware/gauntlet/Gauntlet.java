@@ -5,8 +5,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import tech.jmacsoftware.gauntlet.events.GraveEvent;
-import tech.jmacsoftware.gauntlet.events.TunnelingEvent;
+import tech.jmacsoftware.gauntlet.events.GraveEvents;
+import tech.jmacsoftware.gauntlet.events.TunnelingEvents;
 import tech.jmacsoftware.gauntlet.items.ToolRecipes;
 
 import java.io.File;
@@ -19,8 +19,8 @@ public class Gauntlet extends JavaPlugin {
 	private final ObjectMapper object_mapper = new ObjectMapper();
 
 	public void onEnable() {
-		getServer().getPluginManager().registerEvents(new TunnelingEvent(), this);
-		getServer().getPluginManager().registerEvents(new GraveEvent(), this);
+		getServer().getPluginManager().registerEvents(new TunnelingEvents(), this);
+		getServer().getPluginManager().registerEvents(new GraveEvents(), this);
 		loadConfig();
 		//loadGraves();
 
@@ -45,7 +45,7 @@ public class Gauntlet extends JavaPlugin {
 		if (inventories.isDirectory()) {
 			Arrays.stream(inventories.listFiles()).forEach(grave -> {
 				try {
-					GraveEvent.GRAVES.put(grave.getName().substring(0, grave.getName().length() - 5), object_mapper.readValue(grave, Inventory.class));
+					GraveEvents.GRAVES.put(grave.getName().substring(0, grave.getName().length() - 5), object_mapper.readValue(grave, Inventory.class));
 				} catch (IOException e) {
 					getServer().getConsoleSender().sendMessage(ChatColor.RED + "Unable to load grave from " + grave.getName() + "...\n" + e);
 				}
@@ -54,7 +54,7 @@ public class Gauntlet extends JavaPlugin {
 	}
 
 	private void saveGraves() {
-		GraveEvent.GRAVES.forEach((key, inventory) -> {
+		GraveEvents.GRAVES.forEach((key, inventory) -> {
 			try {
 				object_mapper.writeValue(new File(System.getProperty("user.dir").concat("/resources/inventories/graves/" + key + ".json")), inventory);
 			} catch (FileNotFoundException e) {

@@ -6,7 +6,8 @@ public enum PlayerColors {
 
 	DEFAULT("Default", ChatColor.DARK_GRAY, ChatColor.GRAY),
 	AXMAN_JKC("AxMan_JKC", ChatColor.DARK_RED, ChatColor.RED),
-	LONE_LAD("Lone_Lad", ChatColor.DARK_GREEN, ChatColor.GREEN);
+	LONE_LAD("Lone_Lad", ChatColor.DARK_GREEN, ChatColor.GREEN),
+	REXTER_01("Rexter_01", ChatColor.DARK_BLUE, ChatColor.BLUE);
 
 	private String name;
 
