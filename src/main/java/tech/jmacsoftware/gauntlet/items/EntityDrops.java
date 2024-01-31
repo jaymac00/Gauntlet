@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+
 import tech.jmacsoftware.gauntlet.enums.PlayerColors;
 
 import java.util.ArrayList;
@@ -19,10 +20,12 @@ public class EntityDrops implements Listener {
 		meta.setDisplayName(PlayerColors.resolveByPlayerName(player.getName()).getPrimaryColor() + player.getName() + "\'s Head");
 		meta.setOwningPlayer(player);
 
-		ArrayList<String> lore = new ArrayList<>();
-		lore.add(ChatColor.GRAY + "Killed by " + ChatColor.RESET
-				+ PlayerColors.resolveByPlayerName(killer.getName()).getSecondaryColor() + killer.getName());
-		meta.setLore(lore);
+		if (killer != null) {
+			ArrayList<String> lore = new ArrayList<>();
+			lore.add(ChatColor.GRAY + "Killed by " + ChatColor.RESET
+					+ PlayerColors.resolveByPlayerName(killer.getName()).getSecondaryColor() + killer.getName());
+			meta.setLore(lore);
+		}
 
 		head.setItemMeta(meta);
 		return head;
