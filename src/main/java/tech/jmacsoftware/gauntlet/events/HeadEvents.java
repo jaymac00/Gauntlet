@@ -28,7 +28,7 @@ public class HeadEvents implements Listener {
 	@EventHandler
 	public void onPlace(BlockPlaceEvent event) {
 
-		if (event.getBlockPlaced().getType().equals(Material.PLAYER_HEAD)) {
+		if (event.getItemInHand().getType().equals(Material.PLAYER_HEAD)) {
 			event.setCancelled(true);
 		}
 	}
