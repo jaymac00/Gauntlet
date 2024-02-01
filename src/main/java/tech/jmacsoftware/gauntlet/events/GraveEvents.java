@@ -17,11 +17,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -67,6 +70,16 @@ public class GraveEvents implements Listener {
 			}
 			GRAVES.put(player.getUniqueId().toString(), inventory);
 			event.getDrops().clear();
+		}
+	}
+
+	@EventHandler
+	public void onRespawn(PlayerRespawnEvent event) {
+
+		Player player = event.getPlayer();
+		World world = player.getWorld();
+		Location location = player.getLastDeathLocation();
+		if (validateLocation(world.getEnvironment(), location)) {
 
 			world.getBlockAt(location).getDrops().forEach(itemStack -> world.dropItemNaturally(location, itemStack));
 			world.setType(location, Material.RED_NETHER_BRICK_SLAB);
@@ -208,13 +221,90 @@ public class GraveEvents implements Listener {
 	}
 
 	@EventHandler
+	public void onEntityExplode(EntityExplodeEvent event) {
+
+		event.blockList().forEach(block -> {
+			if (block.getType().equals(Material.RED_NETHER_BRICK_SLAB)) {
+
+				World world = block.getWorld();
+				Location location = block.getLocation();
+				Collection<ItemFrame> itemFrames = world.getEntitiesByClass(ItemFrame.class).stream()
+						.filter(itemFrame -> itemFrame.getLocation().getBlock().getLocation().equals(location)).toList();
+				if (!itemFrames.isEmpty()) {
+
+					ItemFrame itemFrame = itemFrames.stream().findAny().get();
+					world.dropItemNaturally(location, itemFrame.getItem());
+
+					String uuid = itemFrame.getPersistentDataContainer().get(namespaced_key, PersistentDataType.STRING);
+					OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+					Inventory inventory = GRAVES.get(uuid);
+					if (inventory != null && location.equals(offlinePlayer.getLastDeathLocation())) {
+						for (ItemStack itemStack : inventory) {
+							if (itemStack != null) {
+								world.dropItemNaturally(location, itemStack);
+							}
+						}
+						GRAVES.remove(uuid);
+					}
+
+					itemFrames.forEach(ItemFrame::remove);
+					world.setType(location, Material.AIR);
+
+					world.getEntitiesByClass(ArmorStand.class).stream()
+							.filter(armorStand -> armorStand.getEyeLocation().getBlock().getLocation().equals(location))
+							.forEach(ArmorStand::remove);
+				}
+			}
+		});
+	}
+
+	@EventHandler
+	public void onBlockExplode(BlockExplodeEvent event) {
+
+		event.blockList().forEach(block -> {
+			if (block.getType().equals(Material.RED_NETHER_BRICK_SLAB)) {
+
+				World world = block.getWorld();
+				Location location = block.getLocation();
+				Collection<ItemFrame> itemFrames = world.getEntitiesByClass(ItemFrame.class).stream()
+						.filter(itemFrame -> itemFrame.getLocation().getBlock().getLocation().equals(location)).toList();
+				if (!itemFrames.isEmpty()) {
+
+					ItemFrame itemFrame = itemFrames.stream().findAny().get();
+					world.dropItemNaturally(location, itemFrame.getItem());
+
+					String uuid = itemFrame.getPersistentDataContainer().get(namespaced_key, PersistentDataType.STRING);
+					OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+					Inventory inventory = GRAVES.get(uuid);
+					if (inventory != null && location.equals(offlinePlayer.getLastDeathLocation())) {
+						for (ItemStack itemStack : inventory) {
+							if (itemStack != null) {
+								world.dropItemNaturally(location, itemStack);
+							}
+						}
+						GRAVES.remove(uuid);
+					}
+
+					itemFrames.forEach(ItemFrame::remove);
+					world.setType(location, Material.AIR);
+
+					world.getEntitiesByClass(ArmorStand.class).stream()
+							.filter(armorStand -> armorStand.getEyeLocation().getBlock().getLocation().equals(location))
+							.forEach(ArmorStand::remove);
+				}
+			}
+		});
+	}
+
+	@EventHandler
 	public void onPush(BlockPistonExtendEvent event) {
 		Collection<ItemFrame> itemFrames = event.getBlock().getWorld().getEntitiesByClass(ItemFrame.class);
 		if (!event.getBlocks().stream()
 				.filter(block -> !itemFrames.stream()
 						.filter(itemFrame -> itemFrame.getPersistentDataContainer().has(namespaced_key, PersistentDataType.STRING)
 								&& itemFrame.getLocation().getBlock().getLocation()
-								.equals(block.getLocation())).toList().isEmpty())
+								.equals(block.getLocation()))
+						.toList().isEmpty())
 				.toList().isEmpty()) {
 
 			event.setCancelled(true);
@@ -229,7 +319,8 @@ public class GraveEvents implements Listener {
 				.filter(block -> !itemFrames.stream()
 						.filter(itemFrame -> itemFrame.getPersistentDataContainer().has(namespaced_key, PersistentDataType.STRING)
 								&& itemFrame.getLocation().getBlock().getLocation()
-								.equals(block.getLocation())).toList().isEmpty())
+								.equals(block.getLocation()))
+						.toList().isEmpty())
 				.toList().isEmpty()) {
 
 			event.setCancelled(true);
