@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import tech.jmacsoftware.gauntlet.events.GraveEvents;
 import tech.jmacsoftware.gauntlet.events.HeadEvents;
 import tech.jmacsoftware.gauntlet.events.TunnelingEvents;
+import tech.jmacsoftware.gauntlet.helpers.AutoSaveHelper;
 import tech.jmacsoftware.gauntlet.items.ToolRecipes;
 
 public class Gauntlet extends JavaPlugin {
@@ -19,6 +20,8 @@ public class Gauntlet extends JavaPlugin {
 
 		ToolRecipes toolRecipes = new ToolRecipes();
 		toolRecipes.redstonePickaxe();
+
+		getServer().getScheduler().runTaskTimer(this, new AutoSaveHelper(), 5184000, 5184000);
 
 		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Reality is what I want it to be.");
 	}
