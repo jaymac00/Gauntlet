@@ -8,6 +8,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Hopper;
+import org.bukkit.block.Lectern;
 import org.bukkit.block.data.type.Slab;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.ItemFrame;
@@ -81,7 +84,13 @@ public class GraveEvents implements Listener {
 		Location location = player.getLastDeathLocation();
 		if (validateLocation(world.getEnvironment(), location)) {
 
-			world.getBlockAt(location).getDrops().forEach(itemStack -> world.dropItemNaturally(location, itemStack));
+			Block block = world.getBlockAt(location);
+			switch (block.getType()) {
+				case CHEST, TRAPPED_CHEST -> ((Chest) block.getState()).getBlockInventory().forEach(itemStack -> world.dropItemNaturally(location, itemStack));
+				case HOPPER -> ((Hopper) block.getState()).getInventory().forEach(itemStack -> world.dropItemNaturally(location, itemStack));
+				case LECTERN -> ((Lectern) block.getState()).getInventory().forEach(itemStack -> world.dropItemNaturally(location, itemStack));
+			}
+			block.getDrops().forEach(itemStack -> world.dropItemNaturally(location, itemStack));
 			world.setType(location, Material.RED_NETHER_BRICK_SLAB);
 
 			Consumer<ItemFrame> itemFrameConsumer = itemFrame -> createItemFrame(player, itemFrame, BlockDrops.gravestone());
@@ -109,7 +118,7 @@ public class GraveEvents implements Listener {
 
 				String uuid = itemFrames.stream().findAny().get().getPersistentDataContainer().get(
 						namespaced_key, PersistentDataType.STRING);
-				OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+				OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(uuid != null ? uuid : ""));
 				Inventory inventory = GRAVES.get(uuid);
 				if (inventory != null && block.getLocation().equals(offlinePlayer.getLastDeathLocation())) {
 					event.setUseItemInHand(Event.Result.DENY);
@@ -139,7 +148,7 @@ public class GraveEvents implements Listener {
 				}
 
 				String uuid = itemFrame.getPersistentDataContainer().get(namespaced_key, PersistentDataType.STRING);
-				OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+				OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(uuid != null ? uuid : ""));
 				Inventory inventory = GRAVES.get(uuid);
 				if (inventory != null && location.equals(offlinePlayer.getLastDeathLocation())) {
 					for (ItemStack itemStack : inventory) {
@@ -236,7 +245,7 @@ public class GraveEvents implements Listener {
 					world.dropItemNaturally(location, itemFrame.getItem());
 
 					String uuid = itemFrame.getPersistentDataContainer().get(namespaced_key, PersistentDataType.STRING);
-					OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+					OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(uuid != null ? uuid : ""));
 					Inventory inventory = GRAVES.get(uuid);
 					if (inventory != null && location.equals(offlinePlayer.getLastDeathLocation())) {
 						for (ItemStack itemStack : inventory) {
@@ -274,7 +283,7 @@ public class GraveEvents implements Listener {
 					world.dropItemNaturally(location, itemFrame.getItem());
 
 					String uuid = itemFrame.getPersistentDataContainer().get(namespaced_key, PersistentDataType.STRING);
-					OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+					OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(uuid != null ? uuid : ""));
 					Inventory inventory = GRAVES.get(uuid);
 					if (inventory != null && location.equals(offlinePlayer.getLastDeathLocation())) {
 						for (ItemStack itemStack : inventory) {
