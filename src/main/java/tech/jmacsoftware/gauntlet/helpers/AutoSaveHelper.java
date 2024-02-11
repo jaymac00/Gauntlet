@@ -1,5 +1,6 @@
 package tech.jmacsoftware.gauntlet.helpers;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
@@ -22,7 +23,7 @@ public class AutoSaveHelper implements Runnable {
 			server.dispatchCommand(server.getConsoleSender(), "save-all");
 			TimeUnit.SECONDS.sleep(3);
 		} catch (InterruptedException e) {
-			server.getConsoleSender().sendMessage("[Gauntlet.AutoSaveHelper] " + e);
+			server.getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.AutoSaveHelper] " + ChatColor.RESET + e);
 		}
 
 		server.dispatchCommand(server.getConsoleSender(), "save-on");

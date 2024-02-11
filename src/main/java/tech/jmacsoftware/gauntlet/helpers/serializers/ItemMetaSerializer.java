@@ -3,6 +3,7 @@ package tech.jmacsoftware.gauntlet.helpers.serializers;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
@@ -47,12 +48,12 @@ public class ItemMetaSerializer extends StdSerializer<ItemMeta> {
 						try {
 							jsonGenerator.writeObject(attributeModifier);
 						} catch (IOException e) {
-							plugin.getServer().getConsoleSender().sendMessage("[Gauntlet.ItemMetaSerializer_attributes] " + e);
+							plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.ItemMetaSerializer_attributes] " + ChatColor.RESET + e);
 						}
 					});
 					jsonGenerator.writeEndArray();
 				} catch (IOException e) {
-					plugin.getServer().getConsoleSender().sendMessage("[Gauntlet.ItemMetaSerializer_attributes] " + e);
+					plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.ItemMetaSerializer_attributes] " + ChatColor.RESET + e);
 				}
 			});
 			jsonGenerator.writeEndObject();
@@ -64,7 +65,7 @@ public class ItemMetaSerializer extends StdSerializer<ItemMeta> {
 				try {
 					jsonGenerator.writeNumberField(enchantment.getKey().getKey(), level);
 				} catch (IOException e) {
-					plugin.getServer().getConsoleSender().sendMessage("[Gauntlet.ItemMetaSerializer_enchantments] " + e);
+					plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.ItemMetaSerializer_enchantments] " + ChatColor.RESET + e);
 				}
 			});
 			jsonGenerator.writeEndObject();
@@ -76,7 +77,7 @@ public class ItemMetaSerializer extends StdSerializer<ItemMeta> {
 				try {
 					jsonGenerator.writeString(itemFlag.name());
 				} catch (IOException e) {
-					plugin.getServer().getConsoleSender().sendMessage("[Gauntlet.ItemMetaSerializer_itemFlags] " + e);
+					plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.ItemMetaSerializer_itemFlags] " + ChatColor.RESET + e);
 				}
 			});
 			jsonGenerator.writeEndArray();
@@ -88,7 +89,7 @@ public class ItemMetaSerializer extends StdSerializer<ItemMeta> {
 				try {
 					jsonGenerator.writeString(string);
 				} catch (IOException e) {
-					plugin.getServer().getConsoleSender().sendMessage("[Gauntlet.ItemMetaSerializer_lore] " + e);
+					plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.ItemMetaSerializer_lore] " + ChatColor.RESET + e);
 				}
 			});
 			jsonGenerator.writeEndArray();

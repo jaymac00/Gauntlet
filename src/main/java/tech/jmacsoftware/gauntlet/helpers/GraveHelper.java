@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -39,16 +40,20 @@ public class GraveHelper {
                 JsonNode node = jsonParser.readValueAsTree();
 
                 node.fields().forEachRemaining(entry -> {
-                    Inventory inventory = mapper.convertValue(entry.getValue(), Inventory.class);
-                    OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(entry.getKey()));
-                    Inventory grave = plugin.getServer().createInventory(null, inventory.getSize(), player.getName() + "\'s Grave");
-                    grave.setContents(inventory.getContents());
-                    GraveEvents.GRAVES.put(entry.getKey(), grave);
+                    try {
+                        Inventory inventory = mapper.convertValue(entry.getValue(), Inventory.class);
+                        OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(entry.getKey()));
+                        Inventory grave = plugin.getServer().createInventory(null, inventory.getSize(), player.getName() + "\'s Grave");
+                        grave.setContents(inventory.getContents());
+                        GraveEvents.GRAVES.put(entry.getKey(), grave);
+                    } catch (IllegalArgumentException e) {
+                        plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.GraveHelper_loadGraves] (key=" + entry.getKey() + ") " + ChatColor.RESET + e);
+                    }
                 });
 
                 jsonParser.close();
             } catch (IOException e) {
-	            plugin.getServer().getConsoleSender().sendMessage("[Gauntlet.GraveHelper_loadGraves] " + e);
+	            plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.GraveHelper_loadGraves] " + ChatColor.RESET + e);
             }
         }
     }
@@ -60,7 +65,7 @@ public class GraveHelper {
                 graves.getParentFile().mkdirs();
                 graves.createNewFile();
             } catch (IOException e) {
-                plugin.getServer().getConsoleSender().sendMessage("[Gauntlet.GraveHelper_saveGraves] " + e);
+                plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.GraveHelper_saveGraves] " + ChatColor.RESET + e);
             }
         }
 
@@ -77,13 +82,13 @@ public class GraveHelper {
                 try {
                     jsonGenerator.writeObjectField(key, inventory);
                 } catch (IOException e) {
-                    plugin.getServer().getConsoleSender().sendMessage("[Gauntlet.GraveHelper_saveGraves] " + e);
+                    plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.GraveHelper_saveGraves] (key=" + key + ") " + ChatColor.RESET + e);
                 }
             });
             jsonGenerator.writeEndObject();
             jsonGenerator.close();
         } catch (IOException e) {
-            plugin.getServer().getConsoleSender().sendMessage("[Gauntlet.GraveHelper_saveGraves] " + e);
+            plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.GraveHelper_saveGraves] " + ChatColor.RESET + e);
         }
     }
 }

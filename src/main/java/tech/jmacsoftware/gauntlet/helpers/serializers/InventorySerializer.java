@@ -3,6 +3,7 @@ package tech.jmacsoftware.gauntlet.helpers.serializers;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
@@ -37,7 +38,7 @@ public class InventorySerializer extends StdSerializer<Inventory> {
 					jsonGenerator.writeObject(itemStack);
 				}
 			} catch (IOException e) {
-				plugin.getServer().getConsoleSender().sendMessage("[Gauntlet.InventorySerializer_contents] " + e);
+				plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.InventorySerializer_contents] " + ChatColor.RESET + e);
 			}
 		});
 		jsonGenerator.writeEndArray();
