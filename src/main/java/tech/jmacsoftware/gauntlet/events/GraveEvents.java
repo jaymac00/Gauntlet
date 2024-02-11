@@ -73,6 +73,13 @@ public class GraveEvents implements Listener {
 			}
 			GRAVES.put(player.getUniqueId().toString(), inventory);
 			event.getDrops().clear();
+
+			Consumer<ItemFrame> itemFrameConsumer = itemFrame -> createItemFrame(player, itemFrame, BlockDrops.gravestone());
+			world.spawn(location, ItemFrame.class, itemFrameConsumer);
+
+			Consumer<ArmorStand> armorStandConsumer = armorStand -> createArmorStand(player, armorStand);
+			world.spawn(new Location(world, location.getBlockX(), location.getBlockY(), location.getBlockZ(),
+					location.getYaw(), location.getPitch()).add(0.5, -0.225, 0.5), ArmorStand.class, armorStandConsumer);
 		}
 	}
 
@@ -82,23 +89,36 @@ public class GraveEvents implements Listener {
 		Player player = event.getPlayer();
 		World world = player.getWorld();
 		Location location = player.getLastDeathLocation();
-		if (validateLocation(world.getEnvironment(), location)) {
+		if (event.getRespawnReason().equals(PlayerRespawnEvent.RespawnReason.DEATH)
+				&& validateLocation(world.getEnvironment(), location)) {
 
 			Block block = world.getBlockAt(location);
 			switch (block.getType()) {
-				case CHEST, TRAPPED_CHEST -> ((Chest) block.getState()).getBlockInventory().forEach(itemStack -> world.dropItemNaturally(location, itemStack));
-				case HOPPER -> ((Hopper) block.getState()).getInventory().forEach(itemStack -> world.dropItemNaturally(location, itemStack));
-				case LECTERN -> ((Lectern) block.getState()).getInventory().forEach(itemStack -> world.dropItemNaturally(location, itemStack));
+				case CHEST, TRAPPED_CHEST -> ((Chest) block.getState()).getBlockInventory()
+						.forEach(itemStack -> world.dropItemNaturally(location, itemStack));
+				case HOPPER -> ((Hopper) block.getState()).getInventory()
+						.forEach(itemStack -> world.dropItemNaturally(location, itemStack));
+				case LECTERN -> ((Lectern) block.getState()).getInventory()
+						.forEach(itemStack -> world.dropItemNaturally(location, itemStack));
+				case RED_NETHER_BRICK_SLAB -> {
+					Collection<ItemFrame> itemFrames = world.getEntitiesByClass(ItemFrame.class).stream()
+							.filter(itemFrame -> itemFrame.getLocation().getBlock().getLocation().equals(location.getBlock().getLocation())).toList();
+					if (!itemFrames.isEmpty()) {
+
+						ItemFrame itemFrame = itemFrames.stream().findAny().get();
+						world.dropItemNaturally(location, itemFrame.getItem());
+
+						itemFrames.forEach(ItemFrame::remove);
+						world.setType(location, Material.AIR);
+
+						world.getEntitiesByClass(ArmorStand.class).stream()
+								.filter(armorStand -> armorStand.getEyeLocation().getBlock().getLocation().equals(location.getBlock().getLocation()))
+								.forEach(ArmorStand::remove);
+					}
+				}
 			}
 			block.getDrops().forEach(itemStack -> world.dropItemNaturally(location, itemStack));
 			world.setType(location, Material.RED_NETHER_BRICK_SLAB);
-
-			Consumer<ItemFrame> itemFrameConsumer = itemFrame -> createItemFrame(player, itemFrame, BlockDrops.gravestone());
-			world.spawn(location, ItemFrame.class, itemFrameConsumer);
-
-			Consumer<ArmorStand> armorStandConsumer = armorStand -> createArmorStand(player, armorStand);
-			world.spawn(new Location(world, location.getBlockX(), location.getBlockY(), location.getBlockZ(),
-					location.getYaw(), location.getPitch()).add(0.5, -0.225, 0.5), ArmorStand.class, armorStandConsumer);
 		}
 	}
 

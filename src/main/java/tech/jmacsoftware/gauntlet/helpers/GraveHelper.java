@@ -25,7 +25,7 @@ import java.util.UUID;
 
 public class GraveHelper {
 
-    private static final String FILE_NAME = "resources/dynamic/inventories/graves.json";
+    private static final String FILE_NAME = "plugins/Gauntlet/resources/dynamic/inventories/graves.json";
 
     public static void loadGraves(Plugin plugin) {
         File graves = new File(FILE_NAME);

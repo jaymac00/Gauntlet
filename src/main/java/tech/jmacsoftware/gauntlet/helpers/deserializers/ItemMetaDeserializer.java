@@ -54,10 +54,17 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
 			Multimap<Attribute, AttributeModifier> attributes = ArrayListMultimap.create();
 			node.get("attributes").fields().forEachRemaining(entry -> {
 				entry.getValue().forEach(attribute -> {
-					AttributeModifier attributeModifier = new AttributeModifier(
-							UUID.fromString(attribute.get("uniqueId").asText()), attribute.get("name").asText(),
-							attribute.get("amount").asDouble(), AttributeModifier.Operation.valueOf(attribute.get("operation").asText()),
-							EquipmentSlot.valueOf(attribute.get("slot").asText()));
+					AttributeModifier attributeModifier;
+					if (attribute.has("slot")) {
+						attributeModifier = new AttributeModifier(
+								UUID.fromString(attribute.get("uniqueId").asText()), attribute.get("name").asText(),
+								attribute.get("amount").asDouble(), AttributeModifier.Operation.valueOf(attribute.get("operation").asText()),
+								EquipmentSlot.valueOf(attribute.get("slot").asText()));
+					} else {
+						attributeModifier = new AttributeModifier(
+								UUID.fromString(attribute.get("uniqueId").asText()), attribute.get("name").asText(),
+								attribute.get("amount").asDouble(), AttributeModifier.Operation.valueOf(attribute.get("operation").asText()));
+					}
 					attributes.put(Attribute.valueOf(entry.getKey()), attributeModifier);
 				});
 			});
