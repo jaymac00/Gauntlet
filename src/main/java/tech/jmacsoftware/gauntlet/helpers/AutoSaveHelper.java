@@ -22,7 +22,7 @@ public class AutoSaveHelper implements Runnable {
 			server.dispatchCommand(server.getConsoleSender(), "save-all");
 			TimeUnit.SECONDS.sleep(3);
 		} catch (InterruptedException e) {
-			server.getConsoleSender().sendMessage(e.toString());
+			server.getConsoleSender().sendMessage("[Gauntlet.AutoSaveHelper] " + e);
 		}
 
 		server.dispatchCommand(server.getConsoleSender(), "save-on");

@@ -7,6 +7,7 @@ import tech.jmacsoftware.gauntlet.events.GraveEvents;
 import tech.jmacsoftware.gauntlet.events.HeadEvents;
 import tech.jmacsoftware.gauntlet.events.TunnelingEvents;
 import tech.jmacsoftware.gauntlet.helpers.AutoSaveHelper;
+import tech.jmacsoftware.gauntlet.helpers.GraveHelper;
 import tech.jmacsoftware.gauntlet.items.ToolRecipes;
 
 public class Gauntlet extends JavaPlugin {
@@ -16,7 +17,8 @@ public class Gauntlet extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new HeadEvents(), this);
 		getServer().getPluginManager().registerEvents(new TunnelingEvents(), this);
 		loadConfig();
-		//loadGraves();
+
+		GraveHelper.loadGraves(this);
 
 		ToolRecipes toolRecipes = new ToolRecipes();
 		toolRecipes.redstonePickaxe();
@@ -27,7 +29,7 @@ public class Gauntlet extends JavaPlugin {
 	}
 
 	public void onDisable() {
-		//saveGraves();
+		GraveHelper.saveGraves(this);
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "Reality has been restored to its former state.");
 	}
 
@@ -35,13 +37,4 @@ public class Gauntlet extends JavaPlugin {
 		getConfig().options().copyDefaults(true);
 		saveConfig();
 	}
-
-	private void loadGraves() {
-
-	}
-
-	private void saveGraves() {
-
-	}
-
 }
