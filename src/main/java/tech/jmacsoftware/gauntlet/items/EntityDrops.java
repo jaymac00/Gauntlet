@@ -24,6 +24,11 @@ public class EntityDrops implements Listener {
 			ArrayList<String> lore = new ArrayList<>();
 			lore.add(ChatColor.GRAY + "Killed by " + ChatColor.RESET
 					+ PlayerColors.resolveByPlayerName(killer.getName()).getSecondaryColor() + killer.getName());
+
+			ItemStack itemUsed = killer.getItemInUse();
+			if (itemUsed != null && itemUsed.hasItemMeta() && itemUsed.getItemMeta().hasDisplayName()) {
+				lore.add(ChatColor.GRAY + "Using " + ChatColor.RESET + itemUsed.getItemMeta().getDisplayName());
+			}
 			meta.setLore(lore);
 		}
 
