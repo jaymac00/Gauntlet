@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'tech.jmacsoftware'
-version = '1.0.1-SNAPSHOT'
+version = '1.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.16.1'
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
