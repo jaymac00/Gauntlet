@@ -2,7 +2,8 @@ package tech.jmacsoftware.gauntlet.enums;
 
 public enum CustomItems {
 
-	REDSTONE_PICKAXE("Redstone Pickaxe", "redstone_pickaxe");
+	REDSTONE_PICKAXE("Redstone Pickaxe", "redstone_pickaxe"),
+	PLAYER_HEAD("Player Head", "player_head");
 
 	private String name;
 	private String key;
