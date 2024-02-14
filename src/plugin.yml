@@ -4,3 +4,9 @@ version: 1.1
 main: tech.jmacsoftware.gauntlet.Gauntlet
 description: Private server plugin
 api-version: 1.20
+commands:
+  invalidCommand:
+    description: Unused placeholder for unrecognized commands.
+  setModel:
+    description: Sets CustomModelData for item in main hand.
+    usage: /<command>

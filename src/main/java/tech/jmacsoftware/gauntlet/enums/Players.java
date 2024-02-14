@@ -2,7 +2,7 @@ package tech.jmacsoftware.gauntlet.enums;
 
 import org.bukkit.ChatColor;
 
-public enum PlayerColors {
+public enum Players {
 
 	DEFAULT("Default", ChatColor.DARK_GRAY, ChatColor.GRAY),
 	AXMAN_JKC("AxMan_JKC", ChatColor.DARK_RED, ChatColor.RED),
@@ -18,14 +18,14 @@ public enum PlayerColors {
 
 	private ChatColor secondaryColor;
 
-	PlayerColors(String name, ChatColor primaryColor, ChatColor secondaryColor) {
+	Players(String name, ChatColor primaryColor, ChatColor secondaryColor) {
 		this.name = name;
 		this.primaryColor = primaryColor;
 		this.secondaryColor = secondaryColor;
 	}
 
-	public static PlayerColors resolveByPlayerName(String name) {
-		for (PlayerColors playerColors : PlayerColors.values()) {
+	public static Players resolveByPlayerName(String name) {
+		for (Players playerColors : Players.values()) {
 			if (name != null && name.equals(playerColors.name)) {
 				return playerColors;
 			}
