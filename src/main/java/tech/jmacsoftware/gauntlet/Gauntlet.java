@@ -3,11 +3,14 @@ package tech.jmacsoftware.gauntlet;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import tech.jmacsoftware.gauntlet.commands.CommandsHandler;
 import tech.jmacsoftware.gauntlet.events.GraveEvents;
 import tech.jmacsoftware.gauntlet.events.HeadEvents;
 import tech.jmacsoftware.gauntlet.events.TunnelingEvents;
 import tech.jmacsoftware.gauntlet.helpers.AutoSaveHelper;
-import tech.jmacsoftware.gauntlet.helpers.GraveHelper;
+import tech.jmacsoftware.gauntlet.helpers.CommandsHelper;
+import tech.jmacsoftware.gauntlet.helpers.GravesHelper;
+import tech.jmacsoftware.gauntlet.helpers.factories.TabCompleterFactory;
 import tech.jmacsoftware.gauntlet.items.ToolRecipes;
 
 public class Gauntlet extends JavaPlugin {
@@ -18,7 +21,8 @@ public class Gauntlet extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new TunnelingEvents(), this);
 		loadConfig();
 
-		GraveHelper.loadGraves(this);
+		CommandsHelper.registerCommands(new CommandsHandler(), new TabCompleterFactory(), this);
+		GravesHelper.loadGraves(this);
 
 		ToolRecipes toolRecipes = new ToolRecipes();
 		toolRecipes.redstonePickaxe();
@@ -29,7 +33,7 @@ public class Gauntlet extends JavaPlugin {
 	}
 
 	public void onDisable() {
-		GraveHelper.saveGraves(this);
+		GravesHelper.saveGraves(this);
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "Reality has been restored to its former state.");
 	}
 
