@@ -74,8 +74,10 @@ public class GraveEvents implements Listener {
 			GRAVES.put(player.getUniqueId().toString(), inventory);
 			event.getDrops().clear();
 
-			Consumer<ItemFrame> itemFrameConsumer = itemFrame -> createItemFrame(player, itemFrame, BlockDrops.gravestone());
-			world.spawn(location, ItemFrame.class, itemFrameConsumer);
+			world.getEntitiesByClass(ArmorStand.class).stream()
+					.filter(armorStand -> armorStand.getEyeLocation().getBlock().getLocation().equals(location.getBlock().getLocation())
+							&& armorStand.getPersistentDataContainer().has(namespaced_key, PersistentDataType.STRING))
+					.forEach(ArmorStand::remove);
 
 			Consumer<ArmorStand> armorStandConsumer = armorStand -> createArmorStand(player, armorStand);
 			world.spawn(new Location(world, location.getBlockX(), location.getBlockY(), location.getBlockZ(),
@@ -108,17 +110,29 @@ public class GraveEvents implements Listener {
 						ItemFrame itemFrame = itemFrames.stream().findAny().get();
 						world.dropItemNaturally(location, itemFrame.getItem());
 
+						String uuid = itemFrame.getPersistentDataContainer().get(namespaced_key, PersistentDataType.STRING);
+						OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(uuid != null ? uuid : ""));
+						Inventory inventory = GRAVES.get(uuid);
+						if (uuid != null && !uuid.equals(player.getUniqueId().toString())
+								&& inventory != null && location.equals(offlinePlayer.getLastDeathLocation())) {
+							for (ItemStack itemStack : inventory) {
+								if (itemStack != null) {
+									world.dropItemNaturally(location, itemStack);
+								}
+							}
+							GRAVES.remove(uuid);
+						}
+
 						itemFrames.forEach(ItemFrame::remove);
 						world.setType(location, Material.AIR);
-
-						world.getEntitiesByClass(ArmorStand.class).stream()
-								.filter(armorStand -> armorStand.getEyeLocation().getBlock().getLocation().equals(location.getBlock().getLocation()))
-								.forEach(ArmorStand::remove);
 					}
 				}
 			}
 			block.getDrops().forEach(itemStack -> world.dropItemNaturally(location, itemStack));
 			world.setType(location, Material.RED_NETHER_BRICK_SLAB);
+
+			Consumer<ItemFrame> itemFrameConsumer = itemFrame -> createItemFrame(player, itemFrame, BlockDrops.gravestone());
+			world.spawn(location, ItemFrame.class, itemFrameConsumer);
 		}
 	}
 
@@ -133,7 +147,8 @@ public class GraveEvents implements Listener {
 
 			World world = player.getWorld();
 			Collection<ItemFrame> itemFrames = world.getEntitiesByClass(ItemFrame.class).stream()
-					.filter(itemFrame -> itemFrame.getLocation().getBlock().getLocation().equals(block.getLocation())).toList();
+					.filter(itemFrame -> itemFrame.getLocation().getBlock().getLocation().equals(block.getLocation())
+							&& itemFrame.getPersistentDataContainer().has(namespaced_key, PersistentDataType.STRING)).toList();
 			if (!itemFrames.isEmpty()) {
 
 				String uuid = itemFrames.stream().findAny().get().getPersistentDataContainer().get(
@@ -183,7 +198,8 @@ public class GraveEvents implements Listener {
 				event.setDropItems(false);
 
 				world.getEntitiesByClass(ArmorStand.class).stream()
-						.filter(armorStand -> armorStand.getEyeLocation().getBlock().getLocation().equals(location))
+						.filter(armorStand -> armorStand.getEyeLocation().getBlock().getLocation().equals(location)
+								&& armorStand.getPersistentDataContainer().has(namespaced_key, PersistentDataType.STRING))
 						.forEach(ArmorStand::remove);
 			}
 		}
@@ -280,7 +296,8 @@ public class GraveEvents implements Listener {
 					world.setType(location, Material.AIR);
 
 					world.getEntitiesByClass(ArmorStand.class).stream()
-							.filter(armorStand -> armorStand.getEyeLocation().getBlock().getLocation().equals(location))
+							.filter(armorStand -> armorStand.getEyeLocation().getBlock().getLocation().equals(location)
+									&& armorStand.getPersistentDataContainer().has(namespaced_key, PersistentDataType.STRING))
 							.forEach(ArmorStand::remove);
 				}
 			}
@@ -318,7 +335,8 @@ public class GraveEvents implements Listener {
 					world.setType(location, Material.AIR);
 
 					world.getEntitiesByClass(ArmorStand.class).stream()
-							.filter(armorStand -> armorStand.getEyeLocation().getBlock().getLocation().equals(location))
+							.filter(armorStand -> armorStand.getEyeLocation().getBlock().getLocation().equals(location)
+									&& armorStand.getPersistentDataContainer().has(namespaced_key, PersistentDataType.STRING))
 							.forEach(ArmorStand::remove);
 				}
 			}
