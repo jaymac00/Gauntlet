@@ -10,16 +10,21 @@ In addition to the releases in this repo, I have a resource pack repo here: [Gau
 - none
 
 **Implemented Events:**
-- Tunneling Event (for Redstone Pickaxe)
+- Grave Events (for player death)
+- Head Events (for player death when killed by another player)
+- Tunneling Events (for Redstone Pickaxe)
 
 **Implemented Items:**
-- Redstone Pickaxe
+- Gravestone (block drop)
+- Player Head Trophy (entity drop)
+- Redstone Pickaxe (recipe)
 
 ## Collaborator Need-To-Know
 
 **Branches:**
 - master - main branch exported to .jar to use on server; don't worry about this branch
 - version* - version branches to stage new implementations and bug fixes; create feature branches out of these
+- *-feature-\* - collaborator feature branches to develop new features
 
 All branches require a Pull Request with one approval, I will handle merges from there.
 
