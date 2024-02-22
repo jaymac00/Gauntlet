@@ -7,7 +7,8 @@ server/*
 !server/paper-1.20.1-196.jar
 
 ### IntelliJ IDEA ###
-.idea/*
+.idea/modules/
+.idea/*.xml
 *.iws
 *.iml
 *.ipr
