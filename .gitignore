@@ -7,6 +7,7 @@ server/*
 !server/paper-1.20.1-196.jar
 
 ### IntelliJ IDEA ###
+.idea/artifacts/*
 .idea/modules/
 .idea/*.xml
 *.iws
