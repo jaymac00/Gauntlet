@@ -23,6 +23,8 @@ public class Gauntlet extends JavaPlugin {
 		ToolRecipes toolRecipes = new ToolRecipes();
 		toolRecipes.redstonePickaxe();
 
+		toolRecipes.craftSaddle();
+
 		getServer().getScheduler().runTaskTimer(this, new AutoSaveHelper(), 5184000, 5184000);
 
 		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Reality is what I want it to be.");

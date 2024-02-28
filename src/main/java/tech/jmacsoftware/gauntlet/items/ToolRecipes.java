@@ -35,4 +35,18 @@ public class ToolRecipes implements Listener {
 
 		plugin.getServer().addRecipe(shapedRecipe);
 	}
+
+	public void craftSaddle() {
+
+		ItemStack item = new ItemStack(Material.SADDLE, 1);
+
+		ShapedRecipe saddle = new ShapedRecipe(Material.SADDLE.getKey(), item);
+		saddle.shape("LLL", "S S", "I I");
+		saddle.setIngredient('L', Material.LEATHER);
+		saddle.setIngredient('S', Material.STRING);
+		saddle.setIngredient('I', Material.IRON_INGOT);
+
+		plugin.getServer().addRecipe(saddle);
+	}
+
 }
