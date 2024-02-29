@@ -8,6 +8,7 @@ import tech.jmacsoftware.gauntlet.events.HeadEvents;
 import tech.jmacsoftware.gauntlet.events.TunnelingEvents;
 import tech.jmacsoftware.gauntlet.helpers.AutoSaveHelper;
 import tech.jmacsoftware.gauntlet.helpers.GraveHelper;
+import tech.jmacsoftware.gauntlet.items.ItemRecipes;
 import tech.jmacsoftware.gauntlet.items.ToolRecipes;
 
 public class Gauntlet extends JavaPlugin {
@@ -22,6 +23,12 @@ public class Gauntlet extends JavaPlugin {
 
 		ToolRecipes toolRecipes = new ToolRecipes();
 		toolRecipes.redstonePickaxe();
+
+		ItemRecipes itemRecipes = new ItemRecipes();
+		itemRecipes.craftSaddle();
+		itemRecipes.craftDHorseArmor();
+		itemRecipes.craftGHorseArmor();
+		itemRecipes.craftIHorseArmor();
 
 		getServer().getScheduler().runTaskTimer(this, new AutoSaveHelper(), 5184000, 5184000);
 
