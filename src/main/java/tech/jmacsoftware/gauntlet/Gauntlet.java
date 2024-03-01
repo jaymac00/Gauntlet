@@ -22,7 +22,7 @@ public class Gauntlet extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new TunnelingEvents(), this);
 		loadConfig();
 
-		CommandsHelper.registerCommands(new CommandsHandler(), new TabCompleterFactory(), this);
+		CommandsHelper.registerCommands(new CommandsHandler(), new TabCompleterFactory(this), this);
 		GravesHelper.loadGraves(this);
 
 		ToolRecipes toolRecipes = new ToolRecipes();

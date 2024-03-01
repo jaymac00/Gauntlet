@@ -3,6 +3,7 @@ package tech.jmacsoftware.gauntlet.enums;
 public enum Commands {
 
 	INVALID_COMMAND("invalidcommand"),
+	RELOAD_TAB_LISTS("reloadtablists"),
 	SET_CUSTOM_MODEL_DATA("setmodel");
 
 	private String command;
