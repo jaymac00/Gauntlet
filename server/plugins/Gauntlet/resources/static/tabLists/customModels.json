@@ -1,0 +1,12 @@
+{
+  "VANILLA": {
+    "keyword": "vanilla",
+    "value": 0,
+    "owners": []
+  },
+  "SERVER_OWNER": {
+    "keyword": "server_owner",
+    "value": 1,
+    "owners": ["Lone_Lad"]
+  }
+}
