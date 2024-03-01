@@ -38,7 +38,7 @@ public class TabCompleterFactory implements TabCompleter {
 				});
 
 				jsonParser.close();
-			} catch (IOException e) {
+			} catch (IOException | IllegalArgumentException e) {
 				plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.TabCompleterFactory] (file=" + tabList.getName() + ") " + ChatColor.RESET + e);
 			}
 		}

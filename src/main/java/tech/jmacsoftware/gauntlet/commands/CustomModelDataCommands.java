@@ -50,7 +50,7 @@ public class CustomModelDataCommands {
 				meta.setCustomModelData(data.getValue());
 			}
 			item.setItemMeta(meta);
-			player.sendMessage(ChatColor.GREEN + "Set CustomModelData for " + item.getType().name() + " to " + data.getValue() + " (" + data.getKeyword() + ")" + "!");
+			player.sendMessage(ChatColor.GREEN + "Set CustomModelData for " + item.getType().name() + " to " + data.getValue() + " (" + data.getKeyword().toUpperCase() + ")" + "!");
 		} else {
 			player.sendMessage(ChatColor.RED + "Not permitted to change CustomModelData for custom item belonging to another player...");
 		}
