@@ -2,7 +2,7 @@ package tech.jmacsoftware.gauntlet.enums;
 
 public enum CustomBlocks {
 
-	GRAVESTONE("Gravestone", "gravestone", 1000);
+	GRAVESTONE("Gravestone", "gravestone", 1);
 
 	private String name;
 
