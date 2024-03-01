@@ -55,4 +55,33 @@ public class CustomModelDataCommands {
 			player.sendMessage(ChatColor.RED + "Not permitted to change CustomModelData for custom item belonging to another player...");
 		}
 	}
+
+	public static void setCustomModelDataForce(Player player, String[] args) {
+
+		if (args.length > 0) {
+			try {
+				int value = Integer.parseInt(args[0]);
+
+				ItemStack item = player.getEquipment() != null ? player.getEquipment().getItemInMainHand() : null;
+				if (item == null || item.getType().equals(Material.AIR)) {
+					player.sendMessage(ChatColor.RED + "Unable to set CustomModelData...");
+					return;
+				}
+
+				if (!item.hasItemMeta()) {
+					ItemStack temp = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE);
+					item.setItemMeta(temp.getItemMeta());
+				}
+
+				ItemMeta meta = item.getItemMeta();
+				meta.setCustomModelData(value);
+				player.sendMessage(ChatColor.GREEN + "Set CustomModelData for " + item.getType().name() + " to " + value + "!");
+
+			} catch (NumberFormatException e) {
+				player.sendMessage(ChatColor.RED + "Unable to set CustomModelData due to invalid args...");
+			}
+		} else {
+			player.sendMessage(ChatColor.RED + "Unable to set CustomModelData due to empty args...");
+		}
+	}
 }
