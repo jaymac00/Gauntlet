@@ -5,6 +5,7 @@ build/
 !**/src/test/**/build/
 server/*
 !server/paper-1.20.1-196.jar
+!server/plugins/Gauntlet/resources/static
 
 ### IntelliJ IDEA ###
 .idea/artifacts/*

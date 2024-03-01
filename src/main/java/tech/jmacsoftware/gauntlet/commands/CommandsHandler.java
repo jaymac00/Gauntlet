@@ -18,6 +18,7 @@ public class CommandsHandler implements CommandExecutor {
 
 			switch (Commands.resolveByCommand(label)) {
 				case INVALID_COMMAND -> sender.sendMessage(ChatColor.RED + "Command \"" + label + "\" unknown...");
+				case RELOAD_TAB_LISTS -> player.getKiller();
 				case SET_CUSTOM_MODEL_DATA -> CustomModelDataCommands.setCustomModelData(player, args);
 			}
 		}
