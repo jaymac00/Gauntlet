@@ -6,28 +6,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import tech.jmacsoftware.gauntlet.enums.CustomModels;
-
-import java.util.Arrays;
-import java.util.List;
+import tech.jmacsoftware.gauntlet.helpers.factories.TabCompleterFactory;
 
 public class CustomModelDataCommands {
 
 	public static void setCustomModelData(Player player, String[] args) {
 
-		CustomModels data = null;
+		TabListEntry data;
 		if (args.length > 0) {
-			try {
-				data = CustomModels.resolveByValue(Integer.parseInt(args[0]));
-			} catch (Exception e) {
-				data = CustomModels.resolveByArg(args[0].toLowerCase());
-			}
+			data = TabCompleterFactory.CUSTOM_MODEL_DATA_TAB_LIST.get(args[0].toUpperCase());
 		} else {
-			data = CustomModels.VANILLA;
+			data = TabCompleterFactory.CUSTOM_MODEL_DATA_TAB_LIST.get("VANILLA");
 		}
 
-		List<String> owners = Arrays.stream(data.getOwners()).toList();
-		if (owners.isEmpty() || owners.contains(player.getName())) {
+		if (data != null && (data.getOwners().isEmpty() || data.getOwners().contains(player.getName()))) {
 
 			ItemStack item = player.getEquipment() != null ? player.getEquipment().getItemInMainHand() : null;
 			if (item == null || item.getType().equals(Material.AIR)) {
@@ -36,7 +28,7 @@ public class CustomModelDataCommands {
 			}
 
 			if (!item.hasItemMeta()) {
-				if (data.equals(CustomModels.VANILLA)) {
+				if (data.getKeyword().equalsIgnoreCase("VANILLA")) {
 					player.sendMessage(ChatColor.GREEN + "No changes made to CustomModelData for " + item.getType().name() + "...");
 					return;
 				}
@@ -51,14 +43,14 @@ public class CustomModelDataCommands {
 				return;
 			}
 
-			if (data.equals(CustomModels.VANILLA)) {
+			if (data.getKeyword().equalsIgnoreCase("VANILLA")) {
 				player.sendMessage(ChatColor.GREEN + "Reverting to default CustomModelData for " + item.getType().name() + "...");
 				meta.setCustomModelData(null);
 			} else {
 				meta.setCustomModelData(data.getValue());
 			}
 			item.setItemMeta(meta);
-			player.sendMessage(ChatColor.GREEN + "Set CustomModelData for " + item.getType().name() + " to " + data.getValue() + " (" + data.getArg() + ")" + "!");
+			player.sendMessage(ChatColor.GREEN + "Set CustomModelData for " + item.getType().name() + " to " + data.getValue() + " (" + data.getKeyword() + ")" + "!");
 		} else {
 			player.sendMessage(ChatColor.RED + "Not permitted to change CustomModelData for custom item belonging to another player...");
 		}
