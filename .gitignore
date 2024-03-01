@@ -5,24 +5,12 @@ build/
 !**/src/test/**/build/
 
 ### server files ###
-server/cache/
-server/config/
-server/libraries/
-server/logs/
-server/plugins/*
-server/versions/
-server/world/
-server/world_nether/
-server/world_the_end/
+server/*/
 server/*.console_history
 server/*.json
 server/*.properties
 server/*.yml
 !server/paper-1.20.1-196.jar
-!server/plugins/Gauntlet/
-server/plugins/Gauntlet/*
-!server/plugins/Gauntlet/resources/
-server/plugins/Gauntlet/resources/*
 !server/plugins/Gauntlet/resources/static/
 
 ### IntelliJ IDEA ###
