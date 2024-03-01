@@ -12,7 +12,12 @@ commands:
     permission-message: This one shouldn't have been findable?!?!
   setModel:
     description: Sets CustomModelData for item in main hand.
-    usage: /<command> [keyword] or /<command> [value]
+    usage: /<command> [keyword]
+  setModelForce:
+    description: Sets CustomModelData for item in main hand, ignoring checks.
+    usage: /<command> [value]
+    permission: gauntlet.ops
+    permission-message: Not permitted to use operator-level command.
   reloadTabLists:
     description: Reloads tab lists.
     usage: /<command>

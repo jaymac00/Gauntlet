@@ -20,6 +20,7 @@ public class CommandsHandler implements CommandExecutor {
 				case INVALID_COMMAND -> sender.sendMessage(ChatColor.RED + "Command \"" + label + "\" unknown...");
 				case RELOAD_TAB_LISTS -> sender.sendMessage(ChatColor.YELLOW + "Command \"" + label + "\" not implemented yet...");
 				case SET_CUSTOM_MODEL_DATA -> CustomModelDataCommands.setCustomModelData(player, args);
+				case SET_CUSTOM_MODEL_DATA_FORCE -> CustomModelDataCommands.setCustomModelDataForce(player, args);
 			}
 		}
 

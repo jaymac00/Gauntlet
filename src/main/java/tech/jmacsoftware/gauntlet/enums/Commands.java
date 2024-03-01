@@ -4,7 +4,8 @@ public enum Commands {
 
 	INVALID_COMMAND("invalidcommand"),
 	RELOAD_TAB_LISTS("reloadtablists"),
-	SET_CUSTOM_MODEL_DATA("setmodel");
+	SET_CUSTOM_MODEL_DATA("setmodel"),
+	SET_CUSTOM_MODEL_DATA_FORCE("setmodelforce");
 
 	private String command;
 
