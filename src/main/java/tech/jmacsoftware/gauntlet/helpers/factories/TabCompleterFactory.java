@@ -3,8 +3,6 @@ package tech.jmacsoftware.gauntlet.helpers.factories;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -12,43 +10,37 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import tech.jmacsoftware.gauntlet.commands.TabListEntry;
 import tech.jmacsoftware.gauntlet.enums.Commands;
-import tech.jmacsoftware.gauntlet.enums.CustomModels;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class TabCompleterFactory implements TabCompleter {
 
-	public static Multimap<String, HashMap<String, List<String>>> TAB_LISTS;
+	public static HashMap<String, TabListEntry> CUSTOM_MODEL_DATA_TAB_LIST = new HashMap<>();
 
-	private static final String DIRECTORY = "plugins/Gauntlet/resources/static/tabLists/";
+	private static final String FILE_NAME = "plugins/Gauntlet/resources/static/tabLists/customModels.json";
 
 	public TabCompleterFactory(Plugin plugin) {
 		super();
-		TAB_LISTS = ArrayListMultimap.create();
 
-		File tabLists = new File(DIRECTORY);
-		if (tabLists.isDirectory()) {
+		File tabList = new File(FILE_NAME);
+		if (tabList.isFile()) {
 			ObjectMapper mapper = new ObjectMapper();
-			Arrays.stream(tabLists.listFiles()).forEach(file -> {
-				try {
-					JsonParser jsonParser = mapper.createParser(file);
-					JsonNode node = jsonParser.readValueAsTree();
+			try {
+				JsonParser jsonParser = mapper.createParser(tabList);
+				JsonNode node = jsonParser.readValueAsTree();
 
-					node.fields().forEachRemaining(entry -> {
-						TAB_LISTS.put(file.getName(), mapper.convertValue(entry, HashMap.class));
-					});
+				node.fields().forEachRemaining(entry -> {
+					CUSTOM_MODEL_DATA_TAB_LIST.put(entry.getKey(), mapper.convertValue(entry.getValue(), TabListEntry.class));
+				});
 
-					jsonParser.close();
-				} catch (IOException e) {
-					plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.TabCompleterFactory] (file=" + file.getName() + ") " + ChatColor.RESET + e);
-				}
-			});
+				jsonParser.close();
+			} catch (IOException e) {
+				plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "[Gauntlet.TabCompleterFactory] (file=" + tabList.getName() + ") " + ChatColor.RESET + e);
+			}
 		}
 	}
 
@@ -56,14 +48,14 @@ public class TabCompleterFactory implements TabCompleter {
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 
 		List<String> tabList = new ArrayList<>();
-		if (sender instanceof Player) {
-			Player player = (Player) sender;
+		if (sender instanceof Player player) {
 
 			switch (Commands.resolveByCommand(label)) {
-				case SET_CUSTOM_MODEL_DATA -> Arrays.stream(CustomModels.values())
-						.filter(customModels -> customModels.getOwners().length < 1 || Arrays.stream(customModels.getOwners()).toList().contains(player.getName()))
-						.forEach(customModels -> tabList.add(customModels.getArg()));
-				// reference TAB_LISTS
+				case SET_CUSTOM_MODEL_DATA -> CUSTOM_MODEL_DATA_TAB_LIST.forEach((key, entry) -> {
+					if (entry.getOwners().size() < 1 || entry.getOwners().contains(player.getName())) {
+						tabList.add(entry.getKeyword());
+					}
+				});
 			}
 		}
 

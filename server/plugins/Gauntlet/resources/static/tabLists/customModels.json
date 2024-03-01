@@ -4,9 +4,39 @@
     "value": 0,
     "owners": []
   },
+  "DS_AQUA": {
+    "keyword": "ds_aqua",
+    "value": 1,
+    "owners": ["Lone_Lad"]
+  },
+  "DS_BLUE": {
+    "keyword": "ds_blue",
+    "value": 2,
+    "owners": ["Lone_Lad"]
+  },
+  "DS_GOLD": {
+    "keyword": "ds_gold",
+    "value": 3,
+    "owners": ["Lone_Lad"]
+  },
+  "DS_GREEN": {
+    "keyword": "ds_green",
+    "value": 4,
+    "owners": ["Lone_Lad"]
+  },
+  "DS_PURPLE": {
+    "keyword": "ds_purple",
+    "value": 5,
+    "owners": ["Lone_Lad"]
+  },
+  "DS_RED": {
+    "keyword": "ds_red",
+    "value": 6,
+    "owners": ["Lone_Lad"]
+  },
   "SERVER_OWNER": {
     "keyword": "server_owner",
-    "value": 1,
+    "value": 9999,
     "owners": ["Lone_Lad"]
   }
 }
