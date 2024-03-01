@@ -13,6 +13,8 @@ commands:
   setModel:
     description: Sets CustomModelData for item in main hand.
     usage: /<command> [keyword]
+    permission: gauntlet.ops
+    permission-message: Not permitted to use operator-level command.
   setModelForce:
     description: Sets CustomModelData for item in main hand, ignoring checks.
     usage: /<command> [value]
