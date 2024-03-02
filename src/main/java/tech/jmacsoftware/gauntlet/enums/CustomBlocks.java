@@ -2,15 +2,19 @@ package tech.jmacsoftware.gauntlet.enums;
 
 public enum CustomBlocks {
 
-	GRAVESTONE("Gravestone", "gravestone");
+	GRAVESTONE("Gravestone", "gravestone", 1);
 
 	private String name;
 
 	private String key;
 
-	CustomBlocks(String name, String key) {
+
+	private int customModelData;
+
+	CustomBlocks(String name, String key, int customModelData) {
 		this.name = name;
 		this.key = key;
+		this.customModelData = customModelData;
 	}
 
 	public String getName() {
@@ -19,5 +23,9 @@ public enum CustomBlocks {
 
 	public String getKey() {
 		return this.key;
+	}
+
+	public int getCustomModelData() {
+		return this.customModelData;
 	}
 }

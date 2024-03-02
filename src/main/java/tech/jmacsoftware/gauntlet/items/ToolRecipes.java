@@ -16,13 +16,14 @@ public class ToolRecipes implements Listener {
 
 	private Plugin plugin = Gauntlet.getPlugin(Gauntlet.class);
 
+	// Nice!
 	public void redstonePickaxe() {
 		ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE,1);
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.WHITE + CustomItems.REDSTONE_PICKAXE.getName());
 		meta.setLocalizedName(CustomItems.REDSTONE_PICKAXE.getName());
-		meta.setCustomModelData(1);
+		meta.setCustomModelData(CustomItems.REDSTONE_PICKAXE.getCustomModelData());
 		item.setItemMeta(meta);
 
 		NamespacedKey namespacedKey = new NamespacedKey(plugin, CustomItems.REDSTONE_PICKAXE.getKey());

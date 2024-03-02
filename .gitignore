@@ -3,21 +3,26 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-server/*
-!server/paper-1.20.1-196.jar
+
+### server files ###
+server/*/
+server/*.console_history
+server/*.json
+server/*.properties
+server/*.yml
+!server/plugins/Gauntlet/resources/static/
 
 ### IntelliJ IDEA ###
-.idea
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+.idea/artifacts/*
+.idea/modules/
+.idea/*.xml
 *.iws
 *.iml
 *.ipr
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+!.idea/artifacts/Gauntlet_jar.xml
 
 ### Eclipse ###
 .apt_generated
