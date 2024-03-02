@@ -75,6 +75,7 @@ public class CustomModelDataCommands {
 
 				ItemMeta meta = item.getItemMeta();
 				meta.setCustomModelData(value);
+				item.setItemMeta(meta);
 				player.sendMessage(ChatColor.GREEN + "Set CustomModelData for " + item.getType().name() + " to " + value + "!");
 
 			} catch (NumberFormatException e) {
