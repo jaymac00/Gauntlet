@@ -16,7 +16,7 @@ public class BlockDrops implements Listener {
 		ItemMeta meta = gravestone.getItemMeta();
 		meta.setDisplayName(ChatColor.WHITE + "Gravestone");
 		meta.setLocalizedName(CustomBlocks.GRAVESTONE.getName());
-		meta.setCustomModelData(1);
+		meta.setCustomModelData(CustomBlocks.GRAVESTONE.getCustomModelData());
 		gravestone.setItemMeta(meta);
 		return gravestone;
 	}

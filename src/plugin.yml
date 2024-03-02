@@ -1,6 +1,28 @@
 name: Gauntlet
 authors: [Lone_Lad, AxMan_JKC]
-version: 1.1.1
+version: 1.2
 main: tech.jmacsoftware.gauntlet.Gauntlet
 description: Private server plugin
 api-version: 1.20
+commands:
+  invalidCommand:
+    description: Unused placeholder for unrecognized commands.
+    usage: Do not use; does not do anything...
+    permission: gauntlet.ops
+    permission-message: This one shouldn't have been findable?!?!
+  setModel:
+    description: Sets CustomModelData for item in main hand.
+    usage: /<command> [keyword]
+  setModelForce:
+    description: Sets CustomModelData for item in main hand, ignoring checks.
+    usage: /<command> [value]
+    permission: gauntlet.ops
+    permission-message: Not permitted to use operator-level command.
+  reloadTabLists:
+    description: Reloads tab lists.
+    usage: /<command>
+    permission: gauntlet.ops
+    permission-message: Not permitted to use operator-level command.
+permissions:
+  gauntlet.ops:
+    description: Overarching operator permissions

@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-public class GraveHelper {
+public class GravesHelper {
 
     private static final String FILE_NAME = "plugins/Gauntlet/resources/dynamic/inventories/graves.json";
 

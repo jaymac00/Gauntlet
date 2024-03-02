@@ -1,0 +1,42 @@
+{
+  "VANILLA": {
+    "keyword": "vanilla",
+    "intValue": 0,
+    "owners": []
+  },
+  "DS_AQUA": {
+    "keyword": "ds_aqua",
+    "intValue": 1001,
+    "owners": ["Lone_Lad"]
+  },
+  "DS_BLUE": {
+    "keyword": "ds_blue",
+    "intValue": 1002,
+    "owners": ["Lone_Lad"]
+  },
+  "DS_GOLD": {
+    "keyword": "ds_gold",
+    "intValue": 1003,
+    "owners": ["Lone_Lad"]
+  },
+  "DS_GREEN": {
+    "keyword": "ds_green",
+    "intValue": 1004,
+    "owners": ["Lone_Lad"]
+  },
+  "DS_PURPLE": {
+    "keyword": "ds_purple",
+    "intValue": 1005,
+    "owners": ["Lone_Lad"]
+  },
+  "DS_RED": {
+    "keyword": "ds_red",
+    "intValue": 1006,
+    "owners": ["Lone_Lad"]
+  },
+  "SERVER_OWNER": {
+    "keyword": "server_owner",
+    "intValue": 9999,
+    "owners": ["Lone_Lad"]
+  }
+}
