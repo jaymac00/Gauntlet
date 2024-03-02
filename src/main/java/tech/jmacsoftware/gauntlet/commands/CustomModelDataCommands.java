@@ -47,12 +47,12 @@ public class CustomModelDataCommands {
 				player.sendMessage(ChatColor.GREEN + "Reverting to default CustomModelData for " + item.getType().name() + "...");
 				meta.setCustomModelData(null);
 			} else {
-				meta.setCustomModelData(data.getValue());
+				meta.setCustomModelData(data.getIntValue());
 			}
 			item.setItemMeta(meta);
-			player.sendMessage(ChatColor.GREEN + "Set CustomModelData for " + item.getType().name() + " to " + data.getValue() + " (" + data.getKeyword().toUpperCase() + ")" + "!");
+			player.sendMessage(ChatColor.GREEN + "Set CustomModelData for " + item.getType().name() + " to " + data.getIntValue() + " (" + data.getKeyword().toUpperCase() + ")" + "!");
 		} else {
-			player.sendMessage(ChatColor.RED + "Not permitted to change CustomModelData for custom item belonging to another player...");
+			player.sendMessage(ChatColor.RED + "Not permitted to change CustomModelData for nonexistent data nor for custom item belonging to another player...");
 		}
 	}
 
