@@ -1,11 +1,29 @@
 package tech.jmacsoftware.gauntlet.items;
 
+import com.google.common.collect.Multimap;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Item;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.tags.CustomItemTagContainer;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.plugin.Plugin;
 import tech.jmacsoftware.gauntlet.Gauntlet;
+import tech.jmacsoftware.gauntlet.enums.CustomItems;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ItemRecipes implements Listener {
 
@@ -60,5 +78,4 @@ public class ItemRecipes implements Listener {
 
         plugin.getServer().addRecipe(ironHorseArmor);
     }
-
 }

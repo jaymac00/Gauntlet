@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import tech.jmacsoftware.gauntlet.events.GraveEvents;
 import tech.jmacsoftware.gauntlet.events.HeadEvents;
+import tech.jmacsoftware.gauntlet.events.SpawningEvents;
 import tech.jmacsoftware.gauntlet.events.TunnelingEvents;
 import tech.jmacsoftware.gauntlet.helpers.AutoSaveHelper;
 import tech.jmacsoftware.gauntlet.helpers.GraveHelper;
@@ -17,12 +18,14 @@ public class Gauntlet extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new GraveEvents(), this);
 		getServer().getPluginManager().registerEvents(new HeadEvents(), this);
 		getServer().getPluginManager().registerEvents(new TunnelingEvents(), this);
+		getServer().getPluginManager().registerEvents(new SpawningEvents(), this);
 		loadConfig();
 
 		GraveHelper.loadGraves(this);
 
 		ToolRecipes toolRecipes = new ToolRecipes();
 		toolRecipes.redstonePickaxe();
+		toolRecipes.senzaMisura();
 
 		ItemRecipes itemRecipes = new ItemRecipes();
 		itemRecipes.craftSaddle();
