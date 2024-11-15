@@ -214,8 +214,8 @@ public class GraveEvents implements Listener {
 		World world = blockPlaced.getWorld();
 		Location location = blockPlaced.getLocation();
 		if (itemStack.hasItemMeta()
-				&& itemStack.getItemMeta().hasLocalizedName()
-				&& itemStack.getItemMeta().getLocalizedName().equals(CustomBlocks.GRAVESTONE.getName())) {
+				&& itemStack.getItemMeta().hasItemName()
+				&& itemStack.getItemMeta().getItemName().equals(CustomBlocks.GRAVESTONE.getName())) {
 
 			Slab slab = (Slab) blockPlaced.getBlockData();
 			Player player = event.getPlayer();

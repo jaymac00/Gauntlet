@@ -28,8 +28,8 @@ public class TunnelingEvents implements Listener {
 		if (checkBlockTag(block)
 				&& tool != null
 				&& tool.hasItemMeta()
-				&& tool.getItemMeta().hasLocalizedName()
-				&& tool.getItemMeta().getLocalizedName().equals(CustomItems.REDSTONE_PICKAXE.getName())) {
+				&& tool.getItemMeta().hasItemName()
+				&& tool.getItemMeta().getItemName().equals(CustomItems.REDSTONE_PICKAXE.getName())) {
 
 			Location playerLocation = player.getLocation();
 			Location blockLocation = block.getLocation();

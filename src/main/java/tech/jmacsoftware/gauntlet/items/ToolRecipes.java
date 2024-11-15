@@ -22,7 +22,7 @@ public class ToolRecipes implements Listener {
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.WHITE + CustomItems.REDSTONE_PICKAXE.getName());
-		meta.setLocalizedName(CustomItems.REDSTONE_PICKAXE.getName());
+		meta.setItemName(CustomItems.REDSTONE_PICKAXE.getName());
 		meta.setCustomModelData(CustomItems.REDSTONE_PICKAXE.getCustomModelData());
 		item.setItemMeta(meta);
 

@@ -35,8 +35,8 @@ public class ItemMetaSerializer extends StdSerializer<ItemMeta> {
 		if (itemMeta.hasDisplayName()) {
 			jsonGenerator.writeStringField("displayName", itemMeta.getDisplayName());
 		}
-		if (itemMeta.hasLocalizedName()) {
-			jsonGenerator.writeStringField("localizedName", itemMeta.getLocalizedName());
+		if (itemMeta.hasItemName()) {
+			jsonGenerator.writeStringField("itemName", itemMeta.getItemName());
 		}
 
 		if (itemMeta.hasAttributeModifiers()) {
