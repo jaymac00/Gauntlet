@@ -1,7 +1,8 @@
 # The Gauntlet
 
 This plugin is written for my personal Minecraft server.
-The server is run on Paper 1.20.1 build 196; therefore this plugin uses the Spigot and Bukkit APIs.
+The server is run on Paper 1.21.1 build 131; therefore this plugin uses the Paper API,
+which is based on the Spigot and Bukkit APIs.
 To develop locally, Java 21 and Gradle 8.5 are required to build and export to jar.
 Please feel free to use this plugin for your own server!
 In addition to the releases in this repo, I have a resource pack repo here: [Gauntlet Resources](https://github.com/jaymac00/GauntletResources).
@@ -26,7 +27,7 @@ In addition to the releases in this repo, I have a resource pack repo here: [Gau
 - version* - version branches to stage new implementations and bug fixes; create feature branches out of these
 - *-feature-\* - collaborator feature branches to develop new features
 
-All branches require a Pull Request with one approval, I will handle merges from there.
+All branches require a Pull Request with my approval, I will handle merges from there.
 
 ### Third-Party Contributors Need-To-Know
 

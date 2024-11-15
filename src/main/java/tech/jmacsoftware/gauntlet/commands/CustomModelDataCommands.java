@@ -38,7 +38,7 @@ public class CustomModelDataCommands {
 			}
 
 			ItemMeta meta = item.getItemMeta();
-			if (meta.hasLocalizedName()) {
+			if (meta.hasItemName()) {
 				player.sendMessage(ChatColor.RED + "Not permitted to change CustomModelData for custom item with special functionality...");
 				return;
 			}

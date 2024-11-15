@@ -47,8 +47,8 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
 				node.get("customModelData").asInt() : null);
 		itemMeta.setDisplayName(node.has("displayName") ?
 				node.get("displayName").asText() : null);
-		itemMeta.setLocalizedName(node.has("localizedName") ?
-				node.get("localizedName").asText() : null);
+		itemMeta.setItemName(node.has("itemName") ?
+				node.get("itemName").asText() : null);
 
 		if (node.has("attributes")) {
 			Multimap<Attribute, AttributeModifier> attributes = ArrayListMultimap.create();

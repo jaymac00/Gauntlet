@@ -16,6 +16,7 @@ import tech.jmacsoftware.gauntlet.items.ToolRecipes;
 
 public class Gauntlet extends JavaPlugin {
 
+	@Override
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(new GraveEvents(), this);
 		getServer().getPluginManager().registerEvents(new HeadEvents(), this);
@@ -39,6 +40,7 @@ public class Gauntlet extends JavaPlugin {
 		getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Reality is what I want it to be.");
 	}
 
+	@Override
 	public void onDisable() {
 		GravesHelper.saveGraves(this);
 		getServer().getConsoleSender().sendMessage(ChatColor.RED + "Reality has been restored to its former state.");
